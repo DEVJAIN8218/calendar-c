@@ -1,176 +1,45 @@
 #include <stdio.h>
-#include <string.h>
-struct calander
-{
-	int year;
-	char month[20];
-	int day;
-};
-int main()
-{
-	struct calander a;
-	int b, c, d, e;
-	printf("enter the year");
-	scanf("%d", &a.year);
-	printf("enter the month");
-	scanf("%s", a.month);
-	printf("enter the day");
-	scanf("%d", &a.day);
+#include <stdbool.h>
 
-    if ((a.year + 1) % 400 == 0 || (a.year + 1) % 4 == 0 && (!((a.year + 1) % 100 == 0)))
-	{
-		b = a.year % 400;
-		if (strcmp(a.month, "January") == 0)
-		{
-			c = b * 365.25 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "February") == 0)
-		{
-			c = b * 365.25 + 31 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "March") == 0)
-		{
-			c = b * 365.25 + 60 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "April")==0)
-		{
-			c = b * 365.25 + 91 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "May")==0)
-		{
-			c = b * 365.25 + 121 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "June") == 0)
-		{
-			c = b * 365.25 + 152 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "July") == 0)
-		{
-			c = b * 365.25 + 182 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "August") == 0)
-		{
-			c = b * 365.25 + 213 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "September") == 0)
-		{
-			c = b * 365.25 + 244 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "October") == 0)
-		{
-			c = b * 365.25 + 274 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "November") == 0)
-		{
-			c = b * 365.25 + 305 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "December") == 0)
-		{
-			c = b * 365.25 + 335 + a.day;
-			d = c % 7;
-		}
-		if (d == 0)
-			printf("Saturday");
-		else if (d == 1)
-			printf("Sunday");
-		else if (d == 2)
-			printf("Monday");
-		else if (d == 3)
-			printf("Tuesday");
-		else if (d == 4)
-			printf("Wednesday");
-		else if (d == 5)
-			printf("Thursday");
-		else if (d == 6)
-			printf("Friday");
-	}
+bool is_leap(int y) {
+    return (y % 400 == 0) || (y % 4 == 0 && y % 100 != 0);
+}
 
-	else{
-		b = a.year % 400;
-		if (strcmp(a.month, "January") == 0)
-		{
-			c = b * 365.25 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "February") == 0)
-		{
-			c = b * 365.25 + 31 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "March")==0)
-		{
-			c = b * 365.25 + 59 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "April")==0)
-		{
-			c = b * 365.25 + 90 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "May")==0)
-		{
-			c = b * 365.25 + 120 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "June")==0)
-		{
-			c = b * 365.25 + 151 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "July")==0)
-		{
-			c = b * 365.25 + 181 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "August")==0)
-		{
-			c = b * 365.25 + 212 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "September")==0)
-		{
-			c = b * 365.25 + 243 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "October")==0)
-		{
-			c = b * 365.25 + 273 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "November")==0)
-		{
-			c = b * 365.25 + 304 + a.day;
-			d = c % 7;
-		}
-		else if (strcmp(a.month, "December")==0)
-		{
-			c = b * 365.25 + 334 + a.day;
-			d = c % 7;
-		}
-		if (d == 0)
-			printf("Saturday");
-		else if (d == 1)
-			printf("Sunday");
-		else if (d == 2)
-			printf("Monday");
-		else if (d == 3)
-			printf("Tuesday");
-		else if (d == 4)
-			printf("Wednesday");
-		else if (d == 5)
-			printf("Thursday");
-		else if (d == 6)
-			printf("Friday");
-	}
+int days_in_month(int y, int m) {
+    static const int dim[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+    if (m == 2) return dim[m] + (is_leap(y) ? 1 : 0);
+    return dim[m];
+}
+
+/* Sakamoto's algorithm: returns 0..6 for Sun..Sat */
+int day_of_week(int y, int m, int d) {
+    static const int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
+    if (m < 3) y -= 1;
+    return (y + y/4 - y/100 + y/400 + t[m-1] + d) % 7;
+}
+
+int main(void) {
+    int d, m, y;
+
+    printf("Enter date (DD MM YYYY): ");
+    if (scanf("%d %d %d", &d, &m, &y) != 3) {
+        printf("Invalid input.\n");
+        return 1;
+    }
+
+    if (m < 1 || m > 12) {
+        printf("Invalid month.\n");
+        return 1;
+    }
+    int maxd = days_in_month(y, m);
+    if (d < 1 || d > maxd) {
+        printf("Invalid day for that month/year (max %d).\n", maxd);
+        return 1;
+    }
+
+    const char *names[] = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+    int w = day_of_week(y, m, d);
+    printf("Day of week: %s\n", names[w]);
+
+    return 0;
 }
